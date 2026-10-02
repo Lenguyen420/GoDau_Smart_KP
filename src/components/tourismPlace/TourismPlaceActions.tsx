@@ -9,7 +9,7 @@ type TourismPlaceActionsProps = {
 function TourismPlaceActions({ address, phone }: TourismPlaceActionsProps) {
   const openDirection = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-    const isMiniApp = Boolean(window.ZaloJavaScriptInterface || window.zaloJSV2);
+    const isMiniApp = Boolean(window.ZaloJavaScriptInterface && /zalo/i.test(window.navigator.userAgent));
 
     if (!isMiniApp) {
       window.open(url, "_blank", "noopener,noreferrer");

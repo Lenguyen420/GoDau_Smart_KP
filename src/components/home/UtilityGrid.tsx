@@ -16,12 +16,12 @@ function UtilityGrid({ items }: UtilityGridProps) {
   const navigate = useNavigate();
 
   const isZaloMiniApp = () => {
-    return Boolean((window as any).ZaloJavaScriptInterface || (window as any).zaloJSV2);
+    return Boolean((window as any).ZaloJavaScriptInterface && /zalo/i.test(window.navigator.userAgent));
   };
 
   const openHref = (href: string) => {
     if (!isZaloMiniApp()) {
-      window.open(href, "_blank", "noopener,noreferrer");
+      window.location.assign(href);
       return;
     }
 
@@ -33,34 +33,60 @@ function UtilityGrid({ items }: UtilityGridProps) {
         },
         fail: (error) => {
           console.error("Không thể mở liên kết trong Mini App", error);
+          window.location.assign(href);
         },
       });
     } catch (error) {
       console.error("Không thể mở liên kết trong Mini App", error);
+      window.location.assign(href);
     }
   };
 
   return (
     <section className="smartkp-utilities" aria-label="Tiện ích số">
-      {items.map((item) => (
-        <button
-          className="smartkp-utility"
-          key={item.title}
-          onClick={() => {
-            if (item.path) {
-              navigate(item.path);
-              return;
-            }
+      {items.map((item) => {
+        const content = (
+          <>
+            <img src={item.icon} alt="" />
+            <span>{item.title}</span>
+          </>
+        );
 
-            if (item.href) {
-              openHref(item.href);
-            }
-          }}
-        >
-          <img src={item.icon} alt="" />
-          <span>{item.title}</span>
-        </button>
-      ))}
+        if (item.href) {
+          return (
+            <a
+              className="smartkp-utility"
+              href={item.href}
+              key={item.title}
+              onClick={(event) => {
+                if (!isZaloMiniApp()) {
+                  return;
+                }
+
+                event.preventDefault();
+                openHref(item.href);
+              }}
+            >
+              {content}
+            </a>
+          );
+        }
+
+        return (
+          <button
+            className="smartkp-utility"
+            key={item.title}
+            onClick={() => {
+              if (item.path) {
+                navigate(item.path);
+              }
+            }}
+            type="button"
+          >
+            {content}
+          </button>
+        );
+      })}
     </section>
   );
 }

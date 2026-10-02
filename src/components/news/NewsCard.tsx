@@ -15,10 +15,9 @@ type NewsCardProps = {
 
 function NewsCard({ item, highlight }: NewsCardProps) {
   const handleOpenNews = () => {
-    const isMiniApp = Boolean(window.ZaloJavaScriptInterface || window.zaloJSV2);
+    const isMiniApp = Boolean(window.ZaloJavaScriptInterface && /zalo/i.test(window.navigator.userAgent));
 
     if (!isMiniApp) {
-      window.open(item.href, "_blank", "noopener,noreferrer");
       return;
     }
 
@@ -29,12 +28,24 @@ function NewsCard({ item, highlight }: NewsCardProps) {
       },
       fail: (error) => {
         console.error("Không thể mở tin tức trong webview", error);
+        window.location.assign(item.href);
       },
     });
   };
 
   return (
-    <button className="news-card" onClick={handleOpenNews} type="button">
+    <a
+      className="news-card"
+      href={item.href}
+      onClick={(event) => {
+        if (!window.ZaloJavaScriptInterface || !/zalo/i.test(window.navigator.userAgent)) {
+          return;
+        }
+
+        event.preventDefault();
+        handleOpenNews();
+      }}
+    >
       <img src={item.image} alt={item.title} />
       <div>
         <h2 className={highlight ? "highlight" : ""}>{item.title}</h2>
@@ -43,7 +54,7 @@ function NewsCard({ item, highlight }: NewsCardProps) {
           <span>{item.date}</span>
         </p>
       </div>
-    </button>
+    </a>
   );
 }
 

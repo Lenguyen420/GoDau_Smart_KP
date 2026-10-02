@@ -8,6 +8,9 @@ import {
 
 import HomePage from "@/pages/index";
 import FeedbackPage from "@/pages/feedback";
+import HotlinePage from "@/pages/hotline";
+import LocalProductDetailPage from "@/pages/localProductDetail";
+import LocalProductsPage from "@/pages/localProducts";
 import NewsPage from "@/pages/news";
 import NotificationsPage from "@/pages/notifications";
 import ProfilePage from "@/pages/profile";
@@ -23,6 +26,9 @@ const Layout = () => {
           <AnimationRoutes>
             <Route path="/" element={<HomePage />}></Route>
             <Route path="/feedback" element={<FeedbackPage />}></Route>
+            <Route path="/hotline" element={<HotlinePage />}></Route>
+            <Route path="/local-products" element={<LocalProductsPage />}></Route>
+            <Route path="/local-product-detail" element={<LocalProductDetailPage />}></Route>
             <Route path="/news" element={<NewsPage />}></Route>
             <Route path="/notifications" element={<NotificationsPage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>
